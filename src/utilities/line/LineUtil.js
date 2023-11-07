@@ -2,14 +2,15 @@ const axios = require("axios");
 const fs = require("fs");
 const FormData = require("form-data");
 const { LINE_NOTIFY } = require("../../constant/UrlEndpoint");
-const path = require("path");
 const {
   ResponseSuccess,
 } = require("../../response_handling/success_handling/Success");
 const {
   ResponseFailed,
 } = require("../../response_handling/error_handling/Failed");
+const path = require("path");
 require("dotenv").config({ path: path.resolve(__dirname, "../../../.env") });
+
 
 const sendLineNotify = ({
   message,
@@ -19,6 +20,7 @@ const sendLineNotify = ({
 }) => {
   try {
     return new Promise((resolve) => {
+      console.log("🚀 ~ file: LineUtil.js:13 ~ dotenv path :: ", path.resolve(__dirname, "../../../.env"))
       let formData = new FormData();
 
       if (imageFilePath) {
@@ -29,7 +31,7 @@ const sendLineNotify = ({
       if (stickerPackageId)
         formData.append("stickerPackageId", stickerPackageId);
       if (stickerId) formData.append("stickerId", stickerId);
-
+      
       let config = {
         method: "post",
         url: LINE_NOTIFY,
@@ -39,6 +41,7 @@ const sendLineNotify = ({
         },
         data: formData,
       };
+      console.log("🚀 ~ file: LineUtil.js:42 ~ returnnewPromise ~ config.headers.process.env.LINE_TOKEN:", process.env.LINE_TOKEN)
 
       axios(config)
         .then((res) => {
