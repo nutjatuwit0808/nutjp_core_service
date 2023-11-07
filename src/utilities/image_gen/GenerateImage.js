@@ -1,14 +1,24 @@
 const puppeteer = require("puppeteer");
+const puppeteerCore = require("puppeteer-core");
 const fs = require("fs");
 const { HTML_FORM } = require("./templates/form_summary_01");
-const { ResponseFailed } = require("../../response_handling/error_handling/Failed");
-const { ResponseSuccess } = require("../../response_handling/success_handling/Success");
+const {
+  ResponseFailed,
+} = require("../../response_handling/error_handling/Failed");
+const {
+  ResponseSuccess,
+} = require("../../response_handling/success_handling/Success");
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../../.env") });
 
 const generatePngByHtml = (html_data, file_dest) => {
   //file_dest = "./images/output.png"
   try {
     return new Promise(async (resolve) => {
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox"],
+      });
       const page = await browser.newPage();
       await page.setContent(HTML_FORM);
 
