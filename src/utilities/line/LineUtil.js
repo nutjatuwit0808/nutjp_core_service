@@ -20,7 +20,6 @@ const sendLineNotify = ({
 }) => {
   try {
     return new Promise((resolve) => {
-      console.log("🚀 ~ file: LineUtil.js:13 ~ dotenv path :: ", path.resolve(__dirname, "../../../.env"))
       let formData = new FormData();
 
       if (imageFilePath) {
@@ -41,7 +40,6 @@ const sendLineNotify = ({
         },
         data: formData,
       };
-      console.log("🚀 ~ file: LineUtil.js:42 ~ returnnewPromise ~ config.headers.process.env.LINE_TOKEN:", process.env.LINE_TOKEN)
 
       axios(config)
         .then((res) => {

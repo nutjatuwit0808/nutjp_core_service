@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 const puppeteerCore = require("puppeteer-core");
 const fs = require("fs");
-const { HTML_FORM } = require("./templates/form_summary_01");
+const { HTML_FORM, getHtmlFormByData } = require("./templates/form_summary_01");
 const {
   ResponseFailed,
 } = require("../../response_handling/error_handling/Failed");
@@ -15,12 +15,15 @@ const generatePngByHtml = (html_data, file_dest) => {
   //file_dest = "./images/output.png"
   try {
     return new Promise(async (resolve) => {
+      let html_form =  getHtmlFormByData(html_data);
+      console.log("🚀 ~ file: GenerateImage.js:19 ~ returnnewPromise ~ html_form:", html_form)
+
       const browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox"],
       });
       const page = await browser.newPage();
-      await page.setContent(HTML_FORM);
+      await page.setContent(html_form);
 
       // Capture a screenshot
       const screenshot = await page.screenshot({ encoding: "base64" });

@@ -5,14 +5,23 @@ const { generatePngByHtml } = require("./utilities/image_gen/GenerateImage");
 
 const { sendLineNotify } = require("./utilities/line/LineUtil");
 const { ResponseFailed } = require("./response_handling/error_handling/Failed");
-const { ResponseSuccess } = require("./response_handling/success_handling/Success");
+const {
+  ResponseSuccess,
+} = require("./response_handling/success_handling/Success");
 const { FAILED } = require("./constant/ResponseStatus");
 
 const app = express();
 const PORT = 8000;
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: true,
+    // origin: '*'
+  })
+);
 
 app.get("/test", (req, res) => {
   res.send(ResponseSuccess("it success"));
@@ -25,7 +34,10 @@ app.post("/v1/send-line-image", async (req, res) => {
       "../src/assets/images/summary.png"
     );
 
-    let gen_image = await generatePngByHtml({}, image_path);
+    let input_html = req.body.input_html;
+    if (!input_html) throw "Please input data!";
+
+    let gen_image = await generatePngByHtml(input_html, image_path);
     if (gen_image.status === FAILED) throw gen_image.message;
 
     let send_line = await sendLineNotify({
